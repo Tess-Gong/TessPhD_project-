@@ -21,7 +21,7 @@ export default function App() {
   const [showLanding, setShowLanding] = useState(true);
 
   useEffect(() => {
-    fetch('/src/data/survey_data.csv')
+    fetch(`${import.meta.env.BASE_URL}data/survey_data.csv`)
       .then((res) => res.text())
       .then((csv) => {
         const data = parseSurveyData(csv);
@@ -79,22 +79,22 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col bg-white overflow-hidden">
       {/* Navbar */}
-      <nav className="h-16 border-b border-black flex items-center justify-between px-4 md:px-8 shrink-0 bg-white z-[3000]">
-        <div className="flex items-center gap-2 md:gap-4">
-          <h2 className="text-sm md:text-lg font-light tracking-tight uppercase whitespace-nowrap">Canberra Branding</h2>
-          <div className="hidden sm:block h-4 w-[1px] bg-black opacity-20" />
-          <span className="hidden sm:block text-[10px] font-mono opacity-50 uppercase tracking-widest">Interactive Map</span>
+      <nav className="h-16 border-b border-black flex items-center justify-between px-8 shrink-0">
+        <div className="flex items-center gap-4">
+          <h2 className="text-lg font-light tracking-tight uppercase">Canberra Branding</h2>
+          <div className="h-4 w-[1px] bg-black opacity-20" />
+          <span className="text-[10px] font-mono opacity-50 uppercase tracking-widest">Interactive Map</span>
         </div>
-        <div className="flex gap-4 md:gap-8 text-[10px] font-mono uppercase tracking-widest">
+        <div className="flex gap-8 text-[10px] font-mono uppercase tracking-widest">
           <button onClick={() => setShowLanding(true)} className="hover:opacity-50 transition-opacity">Home</button>
-          <button className="hidden sm:block hover:opacity-50 transition-opacity">Insights</button>
-          <button className="hidden sm:block hover:opacity-50 transition-opacity">About</button>
+          <button className="hover:opacity-50 transition-opacity">Insights</button>
+          <button className="hover:opacity-50 transition-opacity">About</button>
         </div>
       </nav>
 
-      <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         {/* Sidebar Filters */}
-        <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-black">
+        <aside className="w-64 shrink-0 border-r border-black">
           <FilterPanel 
             filters={filters} 
             setFilters={setFilters} 
@@ -105,7 +105,7 @@ export default function App() {
         </aside>
 
         {/* Main Map Area */}
-        <main className="w-full h-[60vh] md:h-full md:flex-1 relative shrink-0">
+        <main className="flex-1 relative">
           <CanberraMap 
             stats={suburbStats} 
             onSelectSuburb={handleSelectSuburb} 
@@ -113,11 +113,6 @@ export default function App() {
             viewMode={filters.viewMode}
           />
         </main>
-
-        {/* Global Insights - Positioned under map on mobile, or in sidebar on desktop */}
-        <div className="w-full md:hidden p-8 bg-[#F5F5F3] border-t border-black">
-          <MainInsight allStats={suburbStats} viewMode={filters.viewMode} />
-        </div>
 
         {/* Detail Panel (Right) */}
         <AnimatePresence>
@@ -127,7 +122,7 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="w-full md:w-64 shrink-0 z-[2000] fixed md:absolute right-0 top-16 bottom-0"
+              className="w-64 shrink-0 z-[2000] absolute right-0 top-16 bottom-0"
             >
               <DetailPanel 
                 stats={suburbStats[selectedPostcode]} 
